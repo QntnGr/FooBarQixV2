@@ -7,7 +7,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace FooBarQixV2;
 
-internal class NumberInterpreter
+public class NumberInterpreter
 {
     private int InputNumber { get; set; }
     private string OutputExpression { get; set; }
@@ -35,6 +35,11 @@ internal class NumberInterpreter
         {
             OutputExpression = rslt.ToString();
         }
+    }
+
+    public string GetOutputExpression()
+    {
+        return OutputExpression;
     }
 
     private static string GetDivisibilityByEnum(EnumExpressions enumTable, int number)
