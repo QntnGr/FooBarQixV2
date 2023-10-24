@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using System.Text;
 
 namespace FooBarQixV2;
 
-public class NumberInterpreter
+public class NumberInterpreter : INumberInterpreter
 {
     private int InputNumber { get; set; }
     private string OutputExpression { get; set; }
@@ -17,15 +12,15 @@ public class NumberInterpreter
         OutputExpression = string.Empty;
     }
 
-    public void GetExpressionByNumber()
+    public void ComputeNumber()
     {
         var rslt = new StringBuilder();
 
-        var foo = GetDivisibilityByEnum(EnumExpressions.Foo, InputNumber);
-        var bar = GetDivisibilityByEnum(EnumExpressions.Bar, InputNumber);
-        var qix = GetDivisibilityByEnum(EnumExpressions.Qix, InputNumber);
-        var contained = GetContainedChar(InputNumber);
-        rslt.Append(foo).Append(bar).Append(qix).Append(contained);
+        foreach (var expression in Expressions.ExpressionDictionary)
+        {
+            rslt.Append(GetDivisibilityByEnum(expression, InputNumber));
+        }
+        rslt.Append(GetContainedChar(InputNumber));
 
         if (rslt.Length == 0 || rslt.ToString().Distinct().Count() == 1)
         {
@@ -42,35 +37,28 @@ public class NumberInterpreter
         return OutputExpression;
     }
 
-    private static string GetDivisibilityByEnum(EnumExpressions enumTable, int number)
+    private static string GetDivisibilityByEnum(KeyValuePair<int,string> keyValuePair, int number)
     {
-        var rslt = new StringBuilder();
-        if (number % (int)enumTable == 0)
+        if (number % keyValuePair.Key == 0)
         {
-            rslt.Append(enumTable.ToString());
+            return keyValuePair.Value;
         }
-        return rslt.ToString();
+        return string.Empty;
     }
 
     private static string GetContainedChar(int number)
     {
         var rslt = new StringBuilder();
-
         foreach (char c in number.ToString())
         {
-            if (c.ToString() == ((int)EnumExpressions.Foo).ToString())
+            foreach (var keyValuePair in Expressions.ExpressionDictionary)
             {
-                rslt.Append(EnumExpressions.Foo.ToString());
+                if (c.ToString() == keyValuePair.Key.ToString())
+                {
+                    rslt.Append(keyValuePair.Value);
+                }
             }
-            else if (c.ToString() == ((int)EnumExpressions.Bar).ToString())
-            {
-                rslt.Append(EnumExpressions.Bar.ToString());
-            }
-            else if (c.ToString() == ((int)EnumExpressions.Qix).ToString())
-            {
-                rslt.Append(EnumExpressions.Qix.ToString());
-            }
-            else if (c == '0')
+            if (c == '0')
             {
                 rslt.Append('*');
             }

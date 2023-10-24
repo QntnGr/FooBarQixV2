@@ -1,9 +1,4 @@
 ﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FooBarQixV2
 {
@@ -34,7 +29,7 @@ namespace FooBarQixV2
         public void TestNumberConverterStageOne(int number, string expectedString)
         {
             var interpreter = new NumberInterpreter(number);
-            interpreter.GetExpressionByNumber();
+            interpreter.ComputeNumber();
 
             Assert.AreEqual(expectedString, interpreter.GetOutputExpression());
         }
